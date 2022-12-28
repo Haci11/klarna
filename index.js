@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-import { createOrder } from "./klarna.js";
+import { createOrder, retrieveOrder } from "./klarna.js";
 import { config } from "dotenv";
 config();
 
@@ -21,6 +21,12 @@ app.get("/", (req, res) => {
 app.get("/p/:id", async (req, res) => {
   const product = products.find((product) => product.id === req.params.id);
   const data = await createOrder(product);
+  console.log(data);
+  res.send(data.html_snippet);
+});
+
+app.get("/confirmation", async (req, res) => {
+  const data = await retrieveOrder(req.query.order_id);
   console.log(data);
   res.send(data.html_snippet);
 });
